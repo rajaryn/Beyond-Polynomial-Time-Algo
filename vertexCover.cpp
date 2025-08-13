@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <fstream>
 #include <chrono>
+#include <cstdlib>
 using namespace std;
 
 class Graph
@@ -131,10 +132,24 @@ public:
   }
 };
 
-int main()
+int main(int argc, char *argv[])
 {
 
-  ifstream input("5vertices.txt"); // open file
+  if (argc < 3)
+  {
+    cerr << "Usage: ./demo <vertices> <edges>\n";
+    return 1;
+  }
+
+  int num_vertices = stoi(argv[1]);
+  int num_edges = stoi(argv[2]);
+
+  // Decide file names based on vertices and edges
+  string inputFile = "input_" + to_string(num_vertices) + "_" + to_string(num_edges) + ".txt";
+  string outputFile = "output_" + to_string(num_vertices) + "_" + to_string(num_edges) + ".txt";
+
+  // reading the input file
+  ifstream input(inputFile); // open file
   int n, m;
   input >> n >> m; // read vertices and edges count
   Graph g(n);
@@ -148,13 +163,17 @@ int main()
   input.close();
 
   vector<vector<int>> answer;
-
+  cout << "Calculating vertex cover now..." << endl
+       << flush;
   auto start = chrono::high_resolution_clock::now();
   answer = g.vertexCover();
   auto end = chrono::high_resolution_clock::now();
   double timeTaken = chrono::duration<double, milli>(end - start).count();
+  cout << "Computed the shortest vertex cover in (ms)" << " " << timeTaken << endl
+       << flush;
 
-  ofstream output("5vertices", ios::app); // append mode
+  // writing to the output file
+  ofstream output(outputFile, ios::trunc);
   output << "\n# Results\n";
   output << "Running Time (ms): " << timeTaken << "\n";
   output << "Smallest Vertex Cover(s):\n";
@@ -171,6 +190,5 @@ int main()
     output << " }\n";
   }
   output.close();
-
   return 0;
 }

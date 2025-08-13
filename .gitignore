@@ -1,0 +1,14 @@
+# Ignore text and image files
+*.txt
+*.png
+
+# Ignore lib folder
+lib/
+
+# Ignore VS Code settings
+.vscode/
+
+# Ignore C++ executables
+vertexCover
+*.out
+*.exe
